@@ -24,7 +24,7 @@ Right now SpongeBob will
 
 ## How?
 
-   Watch this video (link will be here)
+Read the [Wiki](https://github.com/codeplanner/SpongeBob/wiki/1.-Home)
 
 ## Roadmap
 The plan is to also add
