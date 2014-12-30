@@ -1,0 +1,22 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+<#
+	foreach(string ns in Model.ExtraUsings.Split(','))
+	{
+#>
+using <#= ns #>;
+<#
+	}
+#>
+namespace <#= Model.Namespace #>
+{ 
+    public partial class <#= Model.DataTypeName #>Controller : BaseController<<#= Model.DataTypeName #>,<#= Model.DataTypeName #>ViewModel>
+    {
+        protected I<#= Model.DataTypeName #>Service <#= Model.DataTypeName #>Service;
+
+        public <#= Model.DataTypeName #>Controller(I<#= Model.DataTypeName #>Service <#= Model.DataTypeName.ToLower() #>Service):base()
+        {
+            base.Service = this.<#= Model.DataTypeName #>Service = <#= Model.DataTypeName.ToLower() #>Service;
+        }        
+    }
+}

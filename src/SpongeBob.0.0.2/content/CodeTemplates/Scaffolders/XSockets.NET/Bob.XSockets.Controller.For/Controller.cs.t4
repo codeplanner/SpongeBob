@@ -1,0 +1,139 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+using System.Collections.Generic;
+using XSockets.Core.XSocket;
+using XSockets.Core.XSocket.Helpers;
+using Ninject;
+<#
+foreach(string ns in Model.ExtraUsings.Split(','))
+{
+#>
+using <#= ns #>;
+<#
+}
+#>
+
+
+namespace <#= Model.Namespace #>
+{
+    public partial class <#= Model.DataTypeName #> : XSocketController
+    {
+        public void <#= Model.ModelType #>GetAll()
+        {
+            try
+            {
+                using (var block = kernel.BeginBlock())
+                {
+                    var result = new List<<#= Model.ModelType #>ViewModel>();
+                    var <#= Model.ModelType.ToLower() #>Service = block.Get<I<#= Model.ModelType #>Service>();
+                    var entities = <#= Model.ModelType.ToLower() #>Service.GetAll();
+                    foreach (var entity in entities)
+                    {
+                        result.Add(new <#= Model.ModelType #>ViewModel(entity, false));
+                    }
+                    this.Send(result, "<#= Model.ModelType #>GetAll");
+                }
+            }
+            catch (Exception ex)
+            {
+                this.SendError(ex, "An error occured i <#= Model.DataTypeName #>.<#= Model.ModelType #>GetAll");
+            }
+        }
+
+        public void <#= Model.ModelType #>GetById(int id)
+        {
+            try
+            {
+                using (var block = kernel.BeginBlock())
+                {
+                    var <#= Model.ModelType.ToLower() #>Service = block.Get<I<#= Model.ModelType #>Service>();
+                    var entity = <#= Model.ModelType.ToLower() #>Service.GetById(id);
+
+                    this.Send(new <#= Model.ModelType #>ViewModel(entity, false), "<#= Model.ModelType #>GetById");
+                }
+            }
+            catch (Exception ex)
+            {
+                this.SendError(ex, "An error occured i <#= Model.DataTypeName #>.<#= Model.ModelType #>yGetById");
+            }
+        }
+
+        public void <#= Model.ModelType #>SaveOrUpdate(<#= Model.ModelType #> entity)
+        {
+            try
+            {
+                using (var block = kernel.BeginBlock())
+                {
+                    var <#= Model.ModelType.ToLower() #>Service = block.Get<I<#= Model.ModelType #>Service>();
+                    var result = <#= Model.ModelType.ToLower() #>Service.SaveOrUpdate(entity);
+                    result.SetViewModel();
+                    this.SendToAll(result, "<#= Model.ModelType #>SaveOrUpdate");
+                }
+            }
+            catch (Exception ex)
+            {
+                this.SendError(ex, "An error occured i <#= Model.DataTypeName #>.<#= Model.ModelType #>GetById");
+            }
+        }
+
+        public void <#= Model.ModelType #>Delete(int id)
+        {
+            try
+            {
+                using (var block = kernel.BeginBlock())
+                {
+                    var <#= Model.ModelType.ToLower() #>Service = block.Get<I<#= Model.ModelType #>Service>();
+                    var entity = <#= Model.ModelType.ToLower() #>Service.GetById(id);
+                    <#= Model.ModelType.ToLower() #>Service.Delete(entity);
+
+                    this.SendToAll(new <#= Model.ModelType #>ViewModel(entity, false), "<#= Model.ModelType #>Delete");
+                }
+            }
+            catch (Exception ex)
+            {
+                this.SendError(ex, "An error occured i <#= Model.DataTypeName #>.<#= Model.ModelType #>Delete");
+            }
+        }
+
+		public void <#= Model.ModelType #>Search(string searchKey, bool exactMatch = false)
+        {
+            try
+            {
+                using (var block = kernel.BeginBlock())
+                {
+                    var result = new List<<#= Model.ModelType #>ViewModel>();
+                    var service = block.Get<I<#= Model.ModelType #>Service>();
+                    var entities = service.Search(searchKey, exactMatch);
+                    foreach (var entity in entities)
+                    {
+                        result.Add(new <#= Model.ModelType #>ViewModel(entity, false));
+                    }
+                    this.Send(result, "<#= Model.ModelType #>Search");
+                }
+            }
+            catch (Exception ex)
+            {
+                this.SendError(ex, "An error occured i VParts.SupplierPage");
+            }
+        }
+
+		public void <#= Model.ModelType #>Page(int page = 1, int pageSize = 10)
+        {
+            try
+            {
+                using (var block = kernel.BeginBlock())
+                {
+                    var <#= Model.ModelType.ToLower() #>Service = block.Get<I<#= Model.ModelType #>Service>();
+                    var entitiesPage = <#= Model.ModelType.ToLower() #>Service.Page(page, pageSize);
+                    var result = new Page<<#= Model.ModelType #>, <#= Model.ModelType #>ViewModel>(entitiesPage);
+                    this.Send(result, "<#= Model.ModelType #>Page");
+                }
+            }
+            catch (Exception ex)
+            {
+                this.SendError(ex, "An error occured in <#= Model.DataTypeName #>.<#= Model.ModelType #>Page");
+            }
+        }
+    }  
+}

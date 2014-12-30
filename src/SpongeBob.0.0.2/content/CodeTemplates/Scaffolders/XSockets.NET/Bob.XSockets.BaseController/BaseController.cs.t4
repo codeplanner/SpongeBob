@@ -1,0 +1,25 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using Ninject;
+using XSockets.Core.XSocket;
+<#
+foreach(string ns in Model.ExtraUsings.Split(','))
+{
+#>
+using <#= ns #>;
+<#
+}
+#>
+
+namespace <#= Model.Namespace #>
+{
+    public partial class <#= Model.DataTypeName #> : XSocketController
+    {
+        private static readonly IKernel kernel;
+        static <#= Model.DataTypeName #>()
+        {
+            //get kernel once in the static constructor
+            kernel = new StandardKernel(new ServiceModule());
+        }
+    }
+}

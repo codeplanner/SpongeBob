@@ -1,0 +1,38 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+using System.Collections.Generic;
+<#
+foreach(string ns in Model.ExtraUsings.Split(','))
+{
+#>
+using <#= ns #>;
+<#
+}
+#>
+
+namespace <#= Model.Namespace #>
+{
+    public class Page<T, TA>
+    {
+        public int Count { get; set; }
+        public int CurrentPage { get; set; }
+        public int PagesCount { get; set; }
+        public int PageSize { get; set; }
+
+        public List<TA> Entities { get; set; }
+
+        public Page(IPage<T> page, bool mapping = true)
+        {
+            this.Entities = new List<TA>();
+            foreach (var entity in page.Entities)
+            {
+                this.Entities.Add((TA) Activator.CreateInstance(typeof (TA), entity, mapping));
+            }
+            this.Count = page.Count;
+            this.PageSize = page.PageSize;
+            this.CurrentPage = page.CurrentPage;
+            this.PagesCount = page.PagesCount;
+        }
+    }
+}

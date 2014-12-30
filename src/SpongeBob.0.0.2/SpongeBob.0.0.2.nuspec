@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>SpongeBob</id>
+        <version>0.0.2</version>
+        <title>BobTheBuilder</title>
+        <authors>Uffe Björklund</authors>
+        <owners>Uffe Björklund</owners>
+        <iconUrl>http://xsockets.net/$2/file/spongebob.gif</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Features
+- Creates a architecture  in Visual Studio(Core, Data, Services)
+- Supports scaffolding of services, respositories and viewmodels
+- Supports scaffolding of ASP.NET MVC controllers</description>
+        <summary>A package with scaffolders to rapidly build a backend from a domain model</summary>
+        <copyright>Uffe Björklund</copyright>
+        <language>en-US</language>
+        <tags>T4Scaffolding Scaffolding VisualStudio</tags>
+        <dependencies>
+            <dependency id="T4Scaffolding" version="1.0.8" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Interfaces\Bob.Core.Interfaces.ps1" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Interfaces\Bob.Core.Interfaces.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Interfaces\IDatabaseFactory.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Interfaces\IDatabaseFactory.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Interfaces\IDataContext.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Interfaces\IDataContext.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Interfaces\IRepository.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Interfaces\IRepository.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Interfaces\IService.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Interfaces\IService.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Interfaces\IUnitOfWork.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Interfaces\IUnitOfWork.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\BaseViewModel.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\BaseViewModel.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\Bob.Core.Model.ps1" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\Bob.Core.Model.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\IPage.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\IPage.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\IValidationContainer.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\IValidationContainer.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\Page.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\Page.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\PersistentEntity.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\PersistentEntity.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\ValidationContainer.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\ValidationContainer.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\ValidationEngine.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.Core.Model\ValidationEngine.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.ViewModel.For\Bob.ViewModel.For.ps1" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.ViewModel.For\Bob.ViewModel.For.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.ViewModel.For\ViewModel.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.ViewModel.For\ViewModel.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Core\Bob.ViewModels.All\Bob.ViewModels.All.ps1" target="content\CodeTemplates\Scaffolders\Architecture\Core\Bob.ViewModels.All\Bob.ViewModels.All.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data\BaseRepository.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data\BaseRepository.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data\Bob.Data.ps1" target="content\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data\Bob.Data.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data\DatabaseFactory.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data\DatabaseFactory.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data\DataBaseHelpers.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data\DataBaseHelpers.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data\DataContext.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data\DataContext.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data\UnitOfWork.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data\UnitOfWork.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data.Repository.For\Bob.Data.Repository.For.ps1" target="content\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data.Repository.For\Bob.Data.Repository.For.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data.Repository.For\IRepository.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data.Repository.For\IRepository.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data.Repository.For\Repository.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Data\Bob.Data.Repository.For\Repository.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Misc\Bob.AddClass\AddClass.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Misc\Bob.AddClass\AddClass.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Misc\Bob.AddClass\Bob.AddClass.ps1" target="content\CodeTemplates\Scaffolders\Architecture\Misc\Bob.AddClass\Bob.AddClass.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Misc\Bob.Architecture\Bob.Architecture.ps1" target="content\CodeTemplates\Scaffolders\Architecture\Misc\Bob.Architecture\Bob.Architecture.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Misc\Bob.ScaffoldBackend\Bob.ScaffoldBackend.ps1" target="content\CodeTemplates\Scaffolders\Architecture\Misc\Bob.ScaffoldBackend\Bob.ScaffoldBackend.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Misc\Bob.ScaffoldBackend.For\Bob.ScaffoldBackend.For.ps1" target="content\CodeTemplates\Scaffolders\Architecture\Misc\Bob.ScaffoldBackend.For\Bob.ScaffoldBackend.For.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Service\Bob.Services\BaseService.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Service\Bob.Services\BaseService.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Service\Bob.Services\Bob.Services.ps1" target="content\CodeTemplates\Scaffolders\Architecture\Service\Bob.Services\Bob.Services.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Service\Bob.Services.For\Bob.Services.For.ps1" target="content\CodeTemplates\Scaffolders\Architecture\Service\Bob.Services.For\Bob.Services.For.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Service\Bob.Services.For\IService.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Service\Bob.Services.For\IService.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Architecture\Service\Bob.Services.For\Service.cs.t4" target="content\CodeTemplates\Scaffolders\Architecture\Service\Bob.Services.For\Service.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\IoC\Ninject\Bob.Ninject.Module\Bob.Ninject.Module.ps1" target="content\CodeTemplates\Scaffolders\IoC\Ninject\Bob.Ninject.Module\Bob.Ninject.Module.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\IoC\Ninject\Bob.Ninject.RequestScope\Bob.Ninject.RequestScope.ps1" target="content\CodeTemplates\Scaffolders\IoC\Ninject\Bob.Ninject.RequestScope\Bob.Ninject.RequestScope.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\IoC\Ninject\Bob.Ninject.ThreadScope\Bob.Ninject.ThreadScope.ps1" target="content\CodeTemplates\Scaffolders\IoC\Ninject\Bob.Ninject.ThreadScope\Bob.Ninject.ThreadScope.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Web\MVC\Bob.MVC.BaseController\BaseController.cs.t4" target="content\CodeTemplates\Scaffolders\Web\MVC\Bob.MVC.BaseController\BaseController.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Web\MVC\Bob.MVC.BaseController\Bob.MVC.BaseController.ps1" target="content\CodeTemplates\Scaffolders\Web\MVC\Bob.MVC.BaseController\Bob.MVC.BaseController.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Web\MVC\Bob.MVC.Controller.For\Bob.MVC.Controller.For.ps1" target="content\CodeTemplates\Scaffolders\Web\MVC\Bob.MVC.Controller.For\Bob.MVC.Controller.For.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Web\MVC\Bob.MVC.Controller.For\MVC.Controller.For.cs.t4" target="content\CodeTemplates\Scaffolders\Web\MVC\Bob.MVC.Controller.For\MVC.Controller.For.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\Web\MVC\Bob.MVC.Controllers.All\Bob.MVC.Controllers.All.ps1" target="content\CodeTemplates\Scaffolders\Web\MVC\Bob.MVC.Controllers.All\Bob.MVC.Controllers.All.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\XSockets.NET\Bob.XSockets.BaseController\BaseController.cs.t4" target="content\CodeTemplates\Scaffolders\XSockets.NET\Bob.XSockets.BaseController\BaseController.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\XSockets.NET\Bob.XSockets.BaseController\Bob.XSockets.BaseController.ps1" target="content\CodeTemplates\Scaffolders\XSockets.NET\Bob.XSockets.BaseController\Bob.XSockets.BaseController.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\XSockets.NET\Bob.XSockets.Controller.For\Bob.XSockets.Controller.For.ps1" target="content\CodeTemplates\Scaffolders\XSockets.NET\Bob.XSockets.Controller.For\Bob.XSockets.Controller.For.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\XSockets.NET\Bob.XSockets.Controller.For\Controller.cs.t4" target="content\CodeTemplates\Scaffolders\XSockets.NET\Bob.XSockets.Controller.For\Controller.cs.t4" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\XSockets.NET\Bob.XSockets.PageModel\Bob.XSockets.PageModel.ps1" target="content\CodeTemplates\Scaffolders\XSockets.NET\Bob.XSockets.PageModel\Bob.XSockets.PageModel.ps1" />
+        <file src="..\..\..\Desktop\BB1\BB1\CodeTemplates\Scaffolders\XSockets.NET\Bob.XSockets.PageModel\Page.cs.t4" target="content\CodeTemplates\Scaffolders\XSockets.NET\Bob.XSockets.PageModel\Page.cs.t4" />
+        <file src="tools\init.ps1" target="tools\init.ps1" />
+        <file src="tools\install.ps1" target="tools\install.ps1" />
+        <file src="tools\SpongeBobTools.psm1" target="tools\SpongeBobTools.psm1" />
+    </files>
+</package>
