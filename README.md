@@ -33,3 +33,7 @@ The plan is to also add
  - Templates for Angular
  - Templates for KnockoutJS
  - Templates for vanilla-JS
+ - Templates for WebAPI
+
+If the roadmap becomes a reality there will probably be a new package for each feature... Like SpongeBob.AngularJS, SpongeBob.WebAPI.
+It would also make sense to move the current MVC features out of the core package into a SpongeBob.MVC package
