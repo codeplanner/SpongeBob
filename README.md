@@ -1,4 +1,4 @@
-# SpongeBob
+# SpongeBob ![Mr SquarePants](http://xsockets.net/$2/file/spongebob.gif)
 
 ## Speed up development with T4 templates
 The possibility to use T4 templates with powershell in Visual Studio is awesome. 
