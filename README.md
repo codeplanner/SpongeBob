@@ -1,5 +1,4 @@
 # SpongeBob
-=========
 
 ## Speed up development with T4 templates
 The possibility to use T4 templates with powershell in Visual Studio is awesome. 
@@ -24,8 +23,6 @@ Right now SpongeBob will
  - Provide possibility to get IoC code for Ninject
 
 ## How?
-Let's say that you are building a new web-app and have created an MVC project named "MyWeb" in Visual Studio 2013
-Then just...
 
    Watch this video (link will be here)
 
