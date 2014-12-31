@@ -2,10 +2,12 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>SpongeBob</id>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
         <title>SpongeBob</title>
         <authors>Uffe Björklund</authors>
         <owners>Uffe Björklund</owners>
+        <licenseUrl>https://github.com/codeplanner/SpongeBob/blob/master/license</licenseUrl>
+        <projectUrl>https://github.com/codeplanner/SpongeBob</projectUrl>
         <iconUrl>http://xsockets.net/$2/file/spongebob.gif</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Features
@@ -15,9 +17,10 @@
         <summary>A package with scaffolders to rapidly build a backend from a domain model.</summary>
         <copyright>Uffe Björklund</copyright>
         <language>en-US</language>
-        <tags>T4Scaffolding T4 Scaffolding VisualStudio</tags>
+        <tags>EntityFramework CodeFirst T4Scaffolding T4 Scaffolding VisualStudio Powershell</tags>
         <dependencies>
             <dependency id="T4Scaffolding" version="1.0.8" />
+            <dependency id="EntityFramework" version="6.1.2" />
         </dependencies>
     </metadata>
     <files>
