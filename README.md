@@ -1,5 +1,9 @@
 # SpongeBob ![Mr SquarePants](http://xsockets.net/$2/file/spongebob.gif)
 
+Take me to the [Wiki](https://github.com/codeplanner/SpongeBob/wiki/1.-Home) now!
+
+==========
+
 ## Speed up development with T4 templates
 The possibility to use T4 templates with powershell in Visual Studio is awesome. 
 You can create projects or any kind of files automatically in your solution.
