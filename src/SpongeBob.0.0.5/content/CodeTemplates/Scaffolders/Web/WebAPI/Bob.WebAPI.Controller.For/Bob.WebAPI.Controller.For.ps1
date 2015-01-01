@@ -32,8 +32,8 @@ if (!$foundModelType) { return }
 ##############################################################
 # Create the base controller if it not exists
 ##############################################################
-if((Get-ProjectItem "Controllers\BaseController.cs" -Project $webApiProjectName) -eq $null){
-	Scaffold Bob.WebAPI.BaseController 
+if((Get-ProjectItem "Controllers\BaseApiController.cs" -Project $webApiProjectName) -eq $null){
+	Scaffold Bob.WebAPI.BaseApiController 
 }
 
 ##############################################################

@@ -10,7 +10,7 @@ using <#= ns #>;
 #>
 namespace <#= Model.Namespace #>
 {     
-	public partial class <#= Model.DataTypeName #>Controller : BaseController<<#= Model.DataTypeName #>,<#= Model.DataTypeName #>ViewModel>
+	public partial class <#= Model.DataTypeName #>Controller : BaseApiController<<#= Model.DataTypeName #>,<#= Model.DataTypeName #>ViewModel>
     {
         protected I<#= Model.DataTypeName #>Service <#= Model.DataTypeName #>Service;
 

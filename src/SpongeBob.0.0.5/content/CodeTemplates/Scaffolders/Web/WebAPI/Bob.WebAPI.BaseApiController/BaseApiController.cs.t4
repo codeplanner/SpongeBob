@@ -2,8 +2,7 @@
 <#@ Output Extension="cs" #>
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Web.Mvc;
+using System.Web.Http;
 <#
 foreach(string ns in Model.ExtraUsings.Split(','))
 {
@@ -15,7 +14,7 @@ using <#= ns #>;
 
 namespace <#= Model.Namespace #>
 { 
-    public abstract class BaseController<T, TA> : ApiController where T : PersistentEntity where TA : PersistentEntity
+    public abstract class BaseApiController<T, TA> : ApiController where T : PersistentEntity where TA : PersistentEntity
     {
         protected IService<T, TA> Service;
 

@@ -40,14 +40,16 @@ Write-Host "kernel.Bind<IDatabaseFactory>().To<DatabaseFactory>().InRequestScope
 
 $classes | ForEach{		
 	$current = $_
-	$_.Bases | ForEach{
-		if($_.Name -eq "PersistentEntity"){							
-			Write-Host "kernel.Bind<I$($current.Name)Repository>().To<$($current.Name)Repository>().InRequestScope();" -ForegroundColor DarkGreen
-			Write-Host "kernel.Bind<I$($current.Name)Service>().To<$($current.Name)Service>().InRequestScope();" -ForegroundColor DarkGreen
-		}
-		if($_.Name -eq "PersistentTrackingEntity"){							
-			Write-Host "kernel.Bind<I$($current.Name)Repository>().To<$($current.Name)Repository>().InRequestScope();" -ForegroundColor DarkGreen
-			Write-Host "kernel.Bind<I$($current.Name)Service>().To<$($current.Name)Service>().InRequestScope();" -ForegroundColor DarkGreen
-		}
-	}		
+	if($_.IsAbstract -eq $false){
+		$_.Bases | ForEach{
+			if($_.Name -eq "PersistentEntity"){							
+				Write-Host "kernel.Bind<I$($current.Name)Repository>().To<$($current.Name)Repository>().InRequestScope();" -ForegroundColor DarkGreen
+				Write-Host "kernel.Bind<I$($current.Name)Service>().To<$($current.Name)Service>().InRequestScope();" -ForegroundColor DarkGreen
+			}
+			#if($_.Name -eq "PersistentTrackingEntity"){							
+			#	Write-Host "kernel.Bind<I$($current.Name)Repository>().To<$($current.Name)Repository>().InRequestScope();" -ForegroundColor DarkGreen
+			#	Write-Host "kernel.Bind<I$($current.Name)Service>().To<$($current.Name)Service>().InRequestScope();" -ForegroundColor DarkGreen
+			#}
+		}		
+	}
 }

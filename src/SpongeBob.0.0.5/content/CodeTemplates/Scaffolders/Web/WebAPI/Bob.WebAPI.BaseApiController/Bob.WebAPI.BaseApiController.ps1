@@ -25,11 +25,11 @@ $coreProjectName = $rootNamespace + ".Core"
 ##############################################################
 # Create the BaseController
 ##############################################################
-$outputPath = "Controllers\BaseController"
+$outputPath = "Controllers\BaseApiController"
 $namespace = $webApiProjectName + ".Controllers"
-$ximports = $coreProjectName + ".Interfaces.Service," + $coreProjectName + ".Model"
+$ximports = $coreProjectName + ".Interfaces.Service," + $coreProjectName + ".Model," + $coreProjectName + ".Interfaces.Validation," + $coreProjectName + ".Interfaces.Paging," + $coreProjectName + ".Common.Paging"
 
-Add-ProjectItemViaTemplate $outputPath -Template BaseController `
+Add-ProjectItemViaTemplate $outputPath -Template BaseApiController `
 	-Model @{Namespace = $namespace; ExtraUsings = $ximports} `
 	-SuccessMessage "Added BaseController to WebAPI {0}" `
 	-TemplateFolders $TemplateFolders -Project $webApiProjectName -CodeLanguage $CodeLanguage -Force:$Force
