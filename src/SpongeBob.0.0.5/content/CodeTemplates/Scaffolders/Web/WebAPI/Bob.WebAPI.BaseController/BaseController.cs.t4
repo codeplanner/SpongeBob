@@ -1,0 +1,61 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Web.Mvc;
+<#
+foreach(string ns in Model.ExtraUsings.Split(','))
+{
+#>
+using <#= ns #>;
+<#
+}
+#>
+
+namespace <#= Model.Namespace #>
+{ 
+    public abstract class BaseController<T, TA> : ApiController where T : PersistentEntity where TA : PersistentEntity
+    {
+        protected IService<T, TA> Service;
+
+        // GET api/values
+        public virtual IEnumerable<TA> Get()
+        {
+            var json = new List<TA>();
+            foreach (var entity in this.Service.GetAll())
+            {
+                json.Add((TA)Activator.CreateInstance(typeof(TA), entity, true));
+            }            
+            return json;
+        }
+        
+        public virtual TA Get(int id)
+        {
+            return (TA)Activator.CreateInstance(typeof (TA), this.Service.GetById(id), true);            
+        }
+
+        public virtual IValidationContainer<T,TA> Post([FromBody]T entity)
+        {
+            return Service.SaveOrUpdate(entity);
+        }
+       
+        public virtual void Delete([FromBody] int id)
+        {                     
+            Service.Delete(id);
+        }
+
+        public virtual IPage<TA> Get(int page, int pageSize)
+        {
+
+            var entities = new List<TA>();
+            var p = this.Service.Page(page, pageSize);
+            foreach (var entity in p.Entities)
+            {
+                entities.Add((TA)Activator.CreateInstance(typeof(TA), entity, true));
+            }
+
+            return new Page<TA>{Count = p.Count, CurrentPage = p.CurrentPage, Entities = entities, PageSize = p.PageSize, PagesCount = p.PagesCount};
+        }
+    }     
+}
