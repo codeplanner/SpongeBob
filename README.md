@@ -23,7 +23,8 @@ Right now SpongeBob will
  - Generate all IoC for using the service layer and data layer with Unit Of Work
  - Provide validation when saving
  - Provide possibility for custom validation
- - Provide possibility to generate MVC controllers
+ - Provide possibility to generate ASP.NET MVC controllers
+ - Provide possibility to generate ASP.NET WebAPI controllers
  - Provide possibility to get IoC code for Ninject
 
 ## How?
@@ -37,7 +38,6 @@ The plan is to also add
  - Templates for Angular
  - Templates for KnockoutJS
  - Templates for vanilla-JS
- - Templates for WebAPI
 
 If the roadmap becomes a reality there will probably be a new package for each feature... Like SpongeBob.AngularJS, SpongeBob.WebAPI.
 It would also make sense to move the current MVC features out of the core package into a SpongeBob.MVC package
