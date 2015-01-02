@@ -1,4 +1,4 @@
-[T4Scaffolding.Scaffolder(Description = "Enter a description of SpongeBob.MVC.Controllers.All here")][CmdletBinding()]
+[T4Scaffolding.Scaffolder(Description = "Enter a description of SpongeBob.ViewModels.All here")][CmdletBinding()]
 param(        
     [string]$Project,
 	[string]$CodeLanguage,
@@ -21,8 +21,10 @@ if($dotIX -gt 0){
 ##############################################################
 $coreProjectName = $rootNamespace + ".Core"
 
+Write-Host "Collecting properties for the model, this might take a while" -ForegroundColor Blue
+
 #open domainmodel files
-$files = (Get-Project $coreProjectName).ProjectItems | Where-Object {$_.Name -eq "Model"} | ForEach{$_.ProjectItems | Where-Object {$_.Document -ne $null }  }
+$files = (Get-Project $coreProjectName).ProjectItems | Where-Object {$_.Name -eq "Model"} | ForEach{$_.ProjectItems }
 $files | ForEach{$_.Open(); $_.Document.Activate()}
 
 Start-Sleep -s 2
@@ -33,12 +35,14 @@ $classes = $namespaces | ForEach{$_.Children}
 
 $classes | ForEach{		
 	$current = $_
-	$_.Bases | ForEach{
-		if($_.Name -eq "PersistentEntity"){							
-			Scaffold Bob.MVC.Controller.For $current.Name -Force:$Force			
-		}
-		#if($_.Name -eq "PersistentTrackingEntity"){							
-		#	Scaffold Bob.ScaffoldBackend.For $current.Name -Force:$Force			
-		#}
-	}		
+	if($_.IsAbstract -eq $false){
+		$_.Bases | ForEach{
+			if($_.Name -eq "PersistentEntity"){							
+				Scaffold Bob.ViewModel.For $current.Name -Force:$Force			
+			}
+			#if($_.Name -eq "PersistentTrackingEntity"){							
+			#	Scaffold Bob.ViewModel.For $current.Name -Force:$Force			
+			#}
+		}		
+	}
 }

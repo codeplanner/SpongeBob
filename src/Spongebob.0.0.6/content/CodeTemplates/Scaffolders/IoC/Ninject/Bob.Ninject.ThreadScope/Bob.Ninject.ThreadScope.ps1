@@ -1,4 +1,4 @@
-[T4Scaffolding.Scaffolder(Description = "Enter a description of SpongeBob.ViewModels.All here")][CmdletBinding()]
+[T4Scaffolding.Scaffolder(Description = "Provides code for registering services/repositories in threadscope")][CmdletBinding()]
 param(        
     [string]$Project,
 	[string]$CodeLanguage,
@@ -33,14 +33,21 @@ $namespaces = $DTE.Documents | ForEach{$_.ProjectItem.FileCodeModel.CodeElements
 	
 $classes = $namespaces | ForEach{$_.Children}
 
+Write-Host "Bind<IUnitOfWork>().To<UnitOfWork>().InThreadScope();" -ForegroundColor DarkGreen
+Write-Host "Bind<IDatabaseFactory>().To<DatabaseFactory>().InThreadScope();" -ForegroundColor DarkGreen
+
 $classes | ForEach{		
 	$current = $_
-	$_.Bases | ForEach{
-		if($_.Name -eq "PersistentEntity"){							
-			Scaffold Bob.ViewModel.For $current.Name -Force:$Force			
-		}
-		if($_.Name -eq "PersistentTrackingEntity"){							
-			Scaffold Bob.ViewModel.For $current.Name -Force:$Force			
-		}
-	}		
+	if($_.IsAbstract -eq $false){
+		$_.Bases | ForEach{
+			if($_.Name -eq "PersistentEntity"){							
+				Write-Host "Bind<I$($current.Name)Repository>().To<$($current.Name)Repository>().InThreadScope();" -ForegroundColor DarkGreen
+				Write-Host "Bind<I$($current.Name)Service>().To<$($current.Name)Service>().InThreadScope();" -ForegroundColor DarkGreen
+			}
+			#if($_.Name -eq "PersistentTrackingEntity"){							
+			#	Write-Host "Bind<I$($current.Name)Repository>().To<$($current.Name)Repository>().InThreadScope();" -ForegroundColor DarkGreen
+			#	Write-Host "Bind<I$($current.Name)Service>().To<$($current.Name)Service>().InThreadScope();" -ForegroundColor DarkGreen
+			#}
+		}		
+	}
 }

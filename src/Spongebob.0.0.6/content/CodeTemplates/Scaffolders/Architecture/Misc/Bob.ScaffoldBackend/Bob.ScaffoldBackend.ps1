@@ -60,12 +60,14 @@ $classes = $namespaces | ForEach{$_.Children}
 
 $classes | ForEach{		
 	$current = $_
-	$_.Bases | ForEach{
-		if($_.Name -eq "PersistentEntity"){							
-			Scaffold Bob.ScaffoldBackend.For $current.Name -Force:$Force			
-		}
-		if($_.Name -eq "PersistentTrackingEntity"){							
-			Scaffold Bob.ScaffoldBackend.For $current.Name -Force:$Force			
-		}
-	}		
+	if($_.IsAbstract -eq $false){
+		$_.Bases | ForEach{
+			if($_.Name -eq "PersistentEntity"){							
+				Scaffold Bob.ScaffoldBackend.For $current.Name -Force:$Force			
+			}
+			#if($_.Name -eq "PersistentTrackingEntity"){							
+			#	Scaffold Bob.ScaffoldBackend.For $current.Name -Force:$Force			
+			#}
+		}		
+	}
 }

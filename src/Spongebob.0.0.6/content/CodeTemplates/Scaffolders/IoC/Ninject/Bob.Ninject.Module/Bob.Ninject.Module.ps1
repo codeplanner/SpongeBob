@@ -42,18 +42,20 @@ Write-Host "		Bind<IDatabaseFactory>().To<DatabaseFactory>().InThreadScope();" -
 $lastName = $null
 $classes | ForEach{		
 	$current = $_
-	$_.Bases | ForEach{
-		if($_.Name -eq "PersistentEntity"){							
-			Write-Host "		Bind<I$($current.Name)Repository>().To<$($current.Name)Repository>().InThreadScope();" -ForegroundColor DarkGreen
-			Write-Host "		Bind<I$($current.Name)Service>().To<$($current.Name)Service>().InThreadScope();" -ForegroundColor DarkGreen
-			$lastName = $current.Name
-		}
-		if($_.Name -eq "PersistentTrackingEntity"){							
-			Write-Host "		Bind<I$($current.Name)Repository>().To<$($current.Name)Repository>().InThreadScope();" -ForegroundColor DarkGreen
-			Write-Host "		Bind<I$($current.Name)Service>().To<$($current.Name)Service>().InThreadScope();" -ForegroundColor DarkGreen
-			$lastName = $current.Name
-		}
-	}		
+	if($_.IsAbstract -eq $false){
+		$_.Bases | ForEach{
+			if($_.Name -eq "PersistentEntity"){							
+				Write-Host "		Bind<I$($current.Name)Repository>().To<$($current.Name)Repository>().InThreadScope();" -ForegroundColor DarkGreen
+				Write-Host "		Bind<I$($current.Name)Service>().To<$($current.Name)Service>().InThreadScope();" -ForegroundColor DarkGreen
+				$lastName = $current.Name
+			}
+			#if($_.Name -eq "PersistentTrackingEntity"){							
+			#	Write-Host "		Bind<I$($current.Name)Repository>().To<$($current.Name)Repository>().InThreadScope();" -ForegroundColor DarkGreen
+			#	Write-Host "		Bind<I$($current.Name)Service>().To<$($current.Name)Service>().InThreadScope();" -ForegroundColor DarkGreen
+			#	$lastName = $current.Name
+			#}
+		}		
+	}
 }    
 Write-Host "    }" -ForegroundColor DarkGreen 
 Write-Host "}" -ForegroundColor DarkGreen 
