@@ -1,0 +1,31 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+
+using Ninject.Modules;
+<#
+	foreach(string ns in Model.ExtraUsings.Split(','))
+	{
+#>
+using <#= ns #>;
+<#
+	}
+#>
+
+namespace <#= Model.Namespace #>
+{
+    public class <#= Model.DataTypeName #> : NinjectModule
+    {
+        public override void Load()
+        {
+<#
+//IoC mappings
+foreach (var map in Model.Mappings) {
+var info = map.Split(',');
+#>
+			Bind<<#= info[0] #>>().To<<#= info[1] #>>().InThreadScope();	
+<#
+}
+#>            
+        }
+    }    
+}

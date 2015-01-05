@@ -1,0 +1,245 @@
+/*
+Copyright (c) <#= DateTime.Now.Year #> 
+# Ulf Tomas Bjorklund
+
+# http://twitter.com/ulfbjo
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System.Collections.Generic;
+<#@ assembly name="System.ComponentModel.DataAnnotations" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.Linq" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Data.Linq.Mapping" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="EnvDTE" #>
+<#
+	foreach(string ns in Model.ExtraUsings.Split(','))
+	{
+	#>
+using <#= ns #>;
+	<#
+	}
+#>
+<# var DataType = (EnvDTE.CodeType) Model.DataType; #>
+
+namespace <#= Model.Namespace #>
+{ 
+    public class <#= Model.DataTypeName #>ViewModel : BaseViewModel
+    {
+		<#
+		//Own properties 
+		foreach (var property in Model.Properties) {
+			var info = property.Split(',');
+			#>
+			public <#= info[1] #> <#= info[0] #> {get;set;}
+			<#			
+		}
+		#>
+
+		<#
+		//Parents 
+		foreach (var property in Model.Parents) {
+			var info = property.Split(',');
+			#>
+			public <#= info[1].Substring(info[1].LastIndexOf('.')+1) #>ViewModel <#= info[0] #> {get;set;}
+			<#			
+		}
+		#>
+
+		<#
+		//Children 
+		foreach (var property in Model.Children) {
+			var info = property.Split(',');					
+			var ix = info[1].LastIndexOf("<");			
+			var targettype =  info[1].Substring(ix).TrimEnd('>');
+			targettype = targettype.Substring(targettype.LastIndexOf('.')+1);
+			var collectiontype = info[1].Substring(0,ix);			
+			collectiontype = collectiontype.Substring(collectiontype.LastIndexOf('.')+1);
+			#>
+			public <#= collectiontype #><<#= targettype #>ViewModel> <#= info[0] #> {get;set;}				
+			<#			
+		}
+		#>
+
+
+		
+		public <#= Model.DataTypeName #>ViewModel(){}
+
+		public <#= Model.DataTypeName #>ViewModel(<#= Model.DataTypeName #> entity, bool mapping = true):base(entity)
+		{
+			<#
+			//Own properties 
+			foreach (var property in Model.Properties) {
+				var info = property.Split(',');
+				#>
+				this.<#= info[0] #> = entity.<#= info[0] #>;
+				<#			
+			}
+			#>
+
+			<#
+			//Parents 
+			foreach (var property in Model.Parents) {
+				var info = property.Split(',');
+				#>
+				if(entity.<#= info[0] #> != null && mapping)
+					this.<#= info[0] #> = new <#= info[1].Substring(info[1].LastIndexOf('.')+1) #>ViewModel(entity.<#= info[0] #>);				
+				<#			
+			}
+			#>
+
+			<#
+			//Children 
+			foreach (var property in Model.Children) {
+				var info = property.Split(',');
+				var ix = info[1].LastIndexOf("<")+1;			
+				var targettype =  info[1].Substring(ix).TrimEnd('>');
+				targettype = targettype.Substring(targettype.LastIndexOf('.')+1);
+				var collectiontype = info[1].Substring(0,ix-1);	
+				collectiontype = collectiontype.Substring(collectiontype.LastIndexOf('.')+1);
+				#>
+				this.<#= info[0] #> = new <#= collectiontype.TrimStart('I') #><<#= targettype #>ViewModel>();
+
+				if(mapping && entity.<#= info[0] #> != null){
+					foreach (var _<#= info[0] #> in entity.<#= info[0] #>)
+					{
+						this.<#= info[0] #>.Add(new <#= targettype #>ViewModel(_<#= info[0] #>,false));
+					}
+				}
+				<#			
+			}
+			#>
+		}
+	}
+}
+
+<#+
+// Describes the information about a property on the model
+class ModelProperty {
+    public string Name { get; set; }
+    public string ValueExpression { get; set; }
+	public EnvDTE.CodeTypeRef Type { get; set; }
+    public bool IsPrimaryKey { get; set; }
+	public bool IsForeignKey { get; set; }
+	public bool IsReadOnly { get; set; }
+	public List<EnvDTE.CodeAttribute> Attributes { get; set; }
+}
+
+// Change this list to include any non-primitive types you think should be eligible to be edited using a textbox
+static Type[] bindableNonPrimitiveTypes = new[] {
+    typeof(string),
+    typeof(decimal),
+    typeof(Guid),
+    typeof(DateTime),
+	typeof(Nullable<DateTime>),
+    typeof(DateTimeOffset),
+    typeof(TimeSpan),
+};
+
+// Call this to get the list of properties in the model. Change this to modify or add your
+// own default formatting for display values.
+List<ModelProperty> GetModelProperties(EnvDTE.CodeType typeInfo, bool includeUnbindableProperties) {
+    List<ModelProperty> results = GetEligibleProperties(typeInfo, includeUnbindableProperties);
+    
+    foreach (ModelProperty prop in results) {
+        if (prop.Type.UnderlyingTypeIs<double>() || prop.Type.UnderlyingTypeIs<decimal>()) {
+            prop.ValueExpression = "String.Format(\"{0:F}\", " + prop.ValueExpression + ")";
+        }
+        else if (prop.Type.UnderlyingTypeIs<DateTime>()) {
+            prop.ValueExpression = "String.Format(\"{0:g}\", " + prop.ValueExpression + ")";
+        }
+		else if (!IsBindableType(prop.Type)) {
+			prop.ValueExpression = GetValueExpression("Model." + prop.Name, (EnvDTE.CodeType)prop.Type.CodeType);
+		}
+    }
+
+    return results;
+}
+
+// Change this list to include the names of properties that should be selected to represent an entity as a single string
+static string[] displayPropertyNames = new[] { "N/A" };
+
+string GetValueExpression(string propertyExpression, EnvDTE.CodeType propertyType) {
+	if (propertyType != null) {
+		var chosenSubproperty = propertyType.DisplayColumnProperty() ?? propertyType.FindProperty(displayPropertyNames);
+		if (chosenSubproperty != null) {
+			var toStringSuffix = chosenSubproperty.Type.AsFullName == "System.String" ? "" : ".ToString()";
+			return String.Format("({0} == null ? \"None\" : {0}.{1}{2})", propertyExpression, chosenSubproperty.Name, toStringSuffix);
+		}
+	}
+	return "Html.DisplayTextFor(_ => " + propertyExpression + ").ToString()";
+}
+
+// Helper
+List<ModelProperty> GetEligibleProperties(EnvDTE.CodeType typeInfo, bool includeUnbindableProperties) {
+    List<ModelProperty> results = new List<ModelProperty>();
+	if (typeInfo != null) {
+		foreach (var prop in typeInfo.VisibleMembers().OfType<EnvDTE.CodeProperty>()) {
+			if (prop.IsReadable() && !prop.HasIndexParameters() && (includeUnbindableProperties || IsBindableType(prop.Type))) {
+				results.Add(new ModelProperty {
+					Name = prop.Name,
+					ValueExpression = "Model." + prop.Name,
+					Type = prop.Type,
+					IsPrimaryKey = Model.PrimaryKeyName == prop.Name,
+					IsForeignKey = ParentRelations.Any(x => x.RelationProperty == prop),
+					IsReadOnly = !prop.IsWriteable(),
+					Attributes = prop.Attributes.OfType<EnvDTE.CodeAttribute>().ToList()
+					
+				});
+			}
+		}
+	}
+
+    return results;
+}
+
+IEnumerable<RelatedEntityInfo> ParentRelations {
+	get { return ((IEnumerable)Model.RelatedEntities).OfType<RelatedEntityInfo>().Where(x => x.RelationType == RelationType.Parent); }
+}
+
+IEnumerable<RelatedEntityInfo> ChildRelations {
+	get { return ((IEnumerable)Model.RelatedEntities).OfType<RelatedEntityInfo>().Where(x => x.RelationType == RelationType.Child); }
+}
+
+int ChildCount {
+	get { return ((IEnumerable)Model.RelatedEntities).OfType<RelatedEntityInfo>().Where(x => x.RelationType == RelationType.Child).Count(); }
+}
+
+bool IsInRelation(string propertyName) {
+    return ((IEnumerable)Model.RelatedEntities).OfType<RelatedEntityInfo>().Count(x => x.RelationName == propertyName) > 0;
+}
+
+bool IsManyToMany(string typeName){
+	return Model.ManyToManyEntities.Contains(typeName);
+}
+
+// Helper
+bool IsBindableType(EnvDTE.CodeTypeRef type) {
+    return type.UnderlyingIsPrimitive() || bindableNonPrimitiveTypes.Any(x => type.UnderlyingTypeIs(x));
+}
+#>

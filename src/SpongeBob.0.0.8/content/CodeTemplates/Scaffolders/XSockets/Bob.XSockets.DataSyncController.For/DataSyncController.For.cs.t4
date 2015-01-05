@@ -1,0 +1,19 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using XSockets.Plugin.Framework.Attributes;
+<#
+	foreach(string ns in Model.ExtraUsings.Split(','))
+	{
+#>
+using <#= ns #>;
+<#
+	}
+#>
+
+namespace <#= Model.Namespace #>
+{
+    [XSocketMetadata("<#= Model.DataTypeName #>")]
+    public class <#= Model.DataTypeName #>Controller : XSocketsDataSyncController<<#= Model.DataTypeName #>Controller, <#= Model.DataTypeName #>, <#= Model.DataTypeName #>ViewModel, <#= Model.DataTypeName #>Service>
+    {
+    }
+}

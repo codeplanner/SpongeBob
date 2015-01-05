@@ -1,0 +1,146 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+using System.Collections.Generic;
+using Ninject;
+using XSockets.Core.Common.Socket;
+using XSockets.Core.XSocket;
+using XSockets.Core.XSocket.Helpers;
+using XSockets.Plugin.Framework;
+<#
+	foreach(string ns in Model.ExtraUsings.Split(','))
+	{
+#>
+using <#= ns #>;
+<#
+	}
+#>
+
+namespace <#= Model.Namespace #>
+{
+    /// <summary>
+    /// XSockets sample controller for basic DataSync operations.    
+    /// </summary>
+    /// <typeparam name="T">XSockets controller</typeparam>
+    /// <typeparam name="TM">Entity Model</typeparam>
+    /// <typeparam name="TVM">Entity View Model</typeparam>
+    /// <typeparam name="TS">Service</typeparam>
+    public abstract class <#= Model.DataTypeName #><T,TM, TVM, TS> : XSocketController
+        where T : class, IXSocketController
+        where TM : PersistentEntity
+        where TVM : BaseViewModel
+        where TS : IService<TM,TVM>
+    {
+        private T _controller;
+        protected readonly string Entity = typeof (TM).Name;
+        protected static readonly IKernel kernel;
+
+        /// <summary>
+        /// Sync commands... Just to avoid string in code
+        /// </summary>
+        public static class DataSyncCommand
+        {
+            public const string Add = "add";
+            public const string Update = "update";
+            public const string Delete = "delete";
+            public const string Init = "init";
+            public const string Error = "Error";
+            public const string Page = "page";
+        }
+
+        static <#= Model.DataTypeName #>()
+        {
+            kernel = new StandardKernel(new ServiceModule());
+        } 
+
+        /// <summary>
+        /// To get the correct controller type, cant use abstract class when sending data
+        /// </summary>
+        protected T Controller
+        {
+            get { return _controller ?? (_controller = (T)Composable.GetExport<IXSocketController>(typeof(T))); }
+        }
+
+        /// <summary>
+        /// Will fetch and send all data in the repository for each topic sent in with the connection.
+        /// </summary>
+        public override void OnOpened()
+        {            
+            //Send back the data in the repo for the type TV
+            this.Invoke(kernel.Get<TS>().GetAll(), string.Format("{0}:{1}", DataSyncCommand.Init, Entity)); 
+        }        
+
+        /// <summary>
+        /// Search the repository, not exposed to clients since accessor is protected
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        protected virtual IEnumerable<TM> Find(Func<TM, bool> expression)
+        {
+            return kernel.Get<TS>().Find(expression);
+        } 
+
+        /// <summary>
+        /// Adds/Updates the data from in reposiotry and tells all (subscribing) clients about it.
+        /// 
+        /// Override to implement custom logic
+        /// </summary>
+        /// <param name="model"></param>
+        public virtual void Update(TM model)
+        {
+            var command = DataSyncCommand.Update;
+            if (model.Id == 0)
+            {                
+                command = DataSyncCommand.Add;
+            }
+
+            var result = kernel.Get<TS>().SaveOrUpdate(model);
+            if (result.IsValid)
+            {
+                //Ok, tell all clients about the update
+                Sync(command, result.EntityViewModel);
+            }
+            else
+            {
+                //Could not save, send information back to caller
+                this.Invoke(result, DataSyncCommand.Error);
+            }            
+        }
+
+        /// <summary>
+        /// Deletes the data from the reposiotry and tells all (subscribing) clients about it
+        /// 
+        /// Override to implement custom logic
+        /// </summary>
+        /// <param name="model"></param>
+        public virtual void Delete(TVM model)
+        {
+            var service = kernel.Get<TS>();
+            service.Delete(model.Id);
+            Sync(DataSyncCommand.Delete, model);            
+        }
+
+        public void Page(int page, int pageSize)
+        {            
+            var entities = new List<TVM>();
+            var p = kernel.Get<TS>().Page(page, pageSize);
+            foreach (var entity in p.Entities)
+            {
+                var vc = entity.GetValidationContainer(default(TVM));
+                vc.SetViewModel();
+                entities.Add(vc.EntityViewModel);               
+            }
+            this.Invoke(new Page<TVM>(entities, p.Count, p.PageSize, p.CurrentPage), string.Format("{0}:{1}", DataSyncCommand.Page, Entity));
+        }
+
+        /// <summary>
+        /// Will do a PUBLISH of changes by default, override to implement specific logic and/or RPC
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="model"></param>
+        protected virtual void Sync(string command, TVM model)
+        {
+            Controller.PublishToAll(model, string.Format("{0}:{1}", command, Entity));
+        }        
+    }
+}

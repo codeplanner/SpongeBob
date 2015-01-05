@@ -1,0 +1,101 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Web.Mvc;
+<#
+foreach(string ns in Model.ExtraUsings.Split(','))
+{
+#>
+using <#= ns #>;
+<#
+}
+#>
+
+namespace <#= Model.Namespace #>
+{ 
+    public abstract class BaseController<T,TA> : Controller
+    {
+        protected IService<T,TA> Service;
+
+        public virtual JsonResult GetAll()
+        {
+            try
+            {
+                var json = new List<TA>();
+                foreach (var entity in this.Service.GetAll())
+                {
+                    json.Add((TA)Activator.CreateInstance(typeof(TA), entity, true));
+                }
+
+                return new JsonResult { Data = new { Entities = json, Status = HttpStatusCode.OK }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult { Data = new { Status = HttpStatusCode.InternalServerError, Exception = ex.Message }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };                                 
+            }
+        }
+
+        public virtual JsonResult GetById(int id)
+        {
+            try
+            {
+                return new JsonResult { Data = new { Entity = Activator.CreateInstance(typeof(TA), this.Service.GetById(id), true), Status = HttpStatusCode.OK}, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult { Data = new { Status = HttpStatusCode.InternalServerError, Exception = ex.Message }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+        }
+
+        [HttpPost]
+        public virtual JsonResult SaveOrUpdate(T entity)
+        {
+            try
+            {
+                var result = this.Service.SaveOrUpdate(entity);
+                result.SetViewModel();
+                return new JsonResult { Data = new { Status = HttpStatusCode.OK, Result = result }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult { Data = new { Status = HttpStatusCode.InternalServerError, Exception = ex.Message }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };                                 
+            }            
+        }
+
+        [HttpPost]
+        public virtual JsonResult Delete(int id)
+        {
+            try
+            {
+                var entity = this.Service.GetById(id);
+                this.Service.Delete(entity);
+                return new JsonResult { Data = new { Status = HttpStatusCode.OK }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult { Data = new { Status = HttpStatusCode.InternalServerError, Exception = ex.Message }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+        }
+
+        public virtual JsonResult Page(int page, int pageSize)
+        {
+            try
+            {
+                var json = new List<TA>();
+                var p = this.Service.Page(page, pageSize);
+                foreach (var entity in p.Entities)
+                {
+                    json.Add((TA)Activator.CreateInstance(typeof(TA), entity, true));
+                }
+                var jsonPage = new { p.Count, p.CurrentPage, p.PagesCount, p.PageSize };
+                return new JsonResult { Data = new {Entities = json, Page = jsonPage, Status = HttpStatusCode.OK}, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult { Data = new { Status = HttpStatusCode.InternalServerError, Exception = ex.Message }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+        }
+    }
+}

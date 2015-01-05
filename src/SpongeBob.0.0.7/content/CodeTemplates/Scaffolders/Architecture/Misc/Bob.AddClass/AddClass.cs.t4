@@ -1,0 +1,11 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+
+namespace <#= Model.Namespace #>
+{ 
+    public class <#= Model.ClassName #> : PersistentEntity
+    {
+		//TODO: Add your properties here
+	}
+}
