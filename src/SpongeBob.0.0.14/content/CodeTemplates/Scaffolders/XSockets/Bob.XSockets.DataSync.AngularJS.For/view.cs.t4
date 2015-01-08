@@ -1,0 +1,42 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="htm" #>
+<style>
+    label {
+        display: block;
+        margin-top: 10px;
+    }
+</style>
+<h1><#= Model.DataTypeName #></h1>
+<button ng-click="add()">Add new <#= Model.DataTypeName #></button>
+<hr/>
+<table style="width: 100%">
+    <tbody>
+        <tr ng-repeat="entity in <#= Model.DataTypeName.ToLower() #>s">
+			<#			
+			foreach (var property in Model.Properties) {
+			#>
+				<td>{{entity.<#= property #>}}</td>
+			<#			
+			}
+			#>
+            <td>
+                <button ng-click="edit(entity)">Edit</button>                
+            </td>            
+            <td>
+                <button ng-click="delete(entity)">Delete</button>
+            </td>
+        </tr>
+    </tbody>    
+</table>
+<hr/>
+<form>
+<#			
+foreach (var property in Model.Properties) {
+#>
+	<label><#= property #></label>
+    <input type="text" ng-model="current.<#= property #>" />
+<#			
+}
+#>
+	<button ng-click="addOrUpdate()">Save</button>
+</form>

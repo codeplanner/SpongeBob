@@ -1,0 +1,43 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+
+namespace <#= Model.Namespace #>
+{
+    /// <summary>
+    /// Properties common for all entities with CRUD behavior.
+    /// </summary>
+    [Serializable]
+    //[DataContract]
+    public abstract class PersistentEntity : IValidatableObject
+    {
+        /// <summary>
+        /// The primary key for all entities...
+        /// </summary>
+        //[DataMember]
+        [Key]
+        public int Id { get; set; }
+
+        /// <summary>
+        /// The time when the entity was first created.
+        /// </summary>
+        //[DataMember]
+        public string Created { get; set; }
+
+        /// <summary>
+        /// The time when the entity was last saved/updated.
+        /// </summary>
+        //[DataMember]
+        public string Updated { get; set; }
+
+        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            //Override this method to implement custom validation in your entities
+
+            yield return ValidationResult.Success;
+        }
+    }
+}

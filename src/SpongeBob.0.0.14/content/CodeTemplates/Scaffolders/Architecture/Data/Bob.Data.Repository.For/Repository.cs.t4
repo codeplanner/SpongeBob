@@ -1,0 +1,22 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+<#
+	foreach(string ns in Model.ExtraUsings.Split(','))
+	{
+#>
+using <#= ns #>;
+<#
+	}
+#>
+
+namespace <#= Model.Namespace #>
+{ 
+	//NOTE:
+	//If you need to implement your own logic/code do it in a partial class,
+	//modifications in this file may be overwritten.
+	public partial class <#= Model.ClassName #>Repository : BaseRepository<<#= Model.ClassName #>>, I<#= Model.ClassName #>Repository
+    {
+		public <#= Model.ClassName #>Repository(IDatabaseFactory databaseFactory):base(databaseFactory){}
+		//Implement custom code in a partial class
+	}
+}

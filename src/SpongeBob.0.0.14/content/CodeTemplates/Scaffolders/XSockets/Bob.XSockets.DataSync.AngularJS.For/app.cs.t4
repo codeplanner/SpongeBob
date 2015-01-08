@@ -1,0 +1,20 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="js" #>
+
+angular.module("myControllers", []);
+var myApp = angular.module("<#= Model.AppName #>", ['ngRoute', 'xsockets', 'myControllers']);
+
+myApp.config(['$locationProvider', '$routeProvider', 'xsProvider',
+    function ($locationProvider, $routeProvider, xsProvider) {
+        // just set up one simple route
+        $routeProvider.when('/<#= Model.DataTypeName.ToLower() #>/', {
+            templateUrl: '/app/views/<#= Model.DataTypeName.ToLower() #>/default.htm',
+            controller: '<#= Model.DataTypeName #>Controller'
+        }).otherwise({
+            redirectTo: '/<#= Model.DataTypeName.ToLower() #>'
+        });
+
+        xsProvider.url = "ws://" + location.host;
+        xsProvider.controllers = ["<#= Model.DataTypeName.ToLower() #>"];
+    }
+]);

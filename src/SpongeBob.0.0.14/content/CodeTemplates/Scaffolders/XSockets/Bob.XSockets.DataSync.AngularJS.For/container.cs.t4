@@ -1,0 +1,21 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="htm" #>
+<!DOCTYPE html>
+<html>
+<head>
+    <title><#= Model.AppName #></title>
+</head>
+<body ng-app="<#= Model.AppName #>">
+    <div ng-view>
+
+    </div>
+
+    <script src="//rawgit.com/XSockets/XSockets.Clients/master/src/XSockets.Clients/XSockets.JavaScript/XSockets.latest.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular-route.js"></script>
+    <script src="//rawgit.com/XSockets/XSockets.Clients/master/src/XSockets.Clients/XSockets.angularJS/src/xsocketsProvider.min.js"></script>
+
+    <script src="/app/<#= Model.AppName #>.js"></script>
+    <script src="/app/controllers/<#= Model.DataTypeName.ToLower() #>controller.js"></script>
+</body>
+</html>

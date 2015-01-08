@@ -1,0 +1,27 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+<#
+foreach(string ns in Model.ExtraUsings.Split(','))
+{
+#>
+using <#= ns #>;
+<#
+}
+#>
+
+namespace <#= Model.Namespace #>
+{ 
+	//NOTE:
+	//If you need to implement your own logic/code do it in a partial class,
+	//modifications in this file may be overwritten.
+    public partial class <#= Model.ClassName #>Service : BaseService<<#= Model.ClassName #>,<#= Model.ClassName #>ViewModel>, I<#= Model.ClassName #>Service
+    {
+		protected new I<#= Model.ClassName #>Repository Repository;				
+		
+		public <#= Model.ClassName #>Service(IUnitOfWork unitOfWork, I<#= Model.ClassName #>Repository <#= Model.ClassName.ToLower() #>Repository):base(unitOfWork)
+		{
+		    base.Repository = Repository = <#= Model.ClassName.ToLower() #>Repository;
+		}		
+		//Implement custom code in a partial class
+	}
+}

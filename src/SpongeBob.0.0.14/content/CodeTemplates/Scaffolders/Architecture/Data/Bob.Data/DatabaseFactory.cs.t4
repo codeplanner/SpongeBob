@@ -1,0 +1,28 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+<#
+	foreach(string ns in Model.ExtraUsings.Split(','))
+	{
+	#>
+using <#= ns #>;
+	<#
+	}
+#>
+
+namespace <#= Model.Namespace #>
+{
+    public class DatabaseFactory : IDatabaseFactory
+    {
+        private IDataContext _datacontext;
+
+        public IDataContext Get()
+        {
+            return this._datacontext ?? (_datacontext = new DataContext());
+        }
+
+        public void Dispose()
+        {
+            this._datacontext.Dispose();
+        }
+    }
+}

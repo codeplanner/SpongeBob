@@ -1,0 +1,95 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+<#
+	foreach(string ns in Model.ExtraUsings.Split(','))
+	{
+#>
+using <#= ns #>;
+<#
+	}
+#>
+
+namespace <#= Model.Namespace #>
+{
+    /// <summary>
+    /// Base for all services... If you need specific businesslogic
+    /// override these methods in inherited classes and implement the logic there.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TA"></typeparam>
+    public abstract class BaseService<T,TA> : IService<T,TA> 
+		where T : PersistentEntity 
+		where TA : BaseViewModel
+    {
+        protected IRepository<T> Repository;
+
+        protected IUnitOfWork UnitOfWork;
+
+        protected BaseService(IUnitOfWork unitOfWork)
+        {
+            this.UnitOfWork = unitOfWork;
+        }
+
+        public virtual IQueryable<T> GetAll()
+        {
+            return this.Repository.GetAll();
+        }
+
+        public virtual IQueryable<T> GetAllReadOnly()
+        {
+            return this.Repository.GetAllReadOnly();
+        }
+
+        public virtual T GetById(int id)
+        {
+            return this.Repository.GetById(id);
+        }
+
+        public virtual IValidationContainer<T,TA> SaveOrUpdate(T entity)
+        {
+            var validation = entity.GetValidationContainer(default(TA));
+            if (!validation.IsValid)
+                return validation;
+
+            this.Repository.SaveOrUpdate(entity);
+            this.UnitOfWork.Commit();
+            return validation;
+        }
+
+        public virtual void Delete(T entity)
+        {
+            this.Repository.Delete(entity);
+            this.UnitOfWork.Commit();
+        }
+
+		public virtual void Delete(int id)
+        {
+            this.Repository.Delete(id);
+            this.UnitOfWork.Commit();
+        }
+
+        public virtual IEnumerable<T> Find(Func<T, bool> expression, int maxHits = 100)
+        {
+            return this.Repository.Find(expression, maxHits);
+        }
+
+        public IQueryable<T> Search(string searchKey, bool exactMatch)
+        {
+            return this.Repository.Search(searchKey, exactMatch);
+        }
+
+        public IPage<T> Page(int page = 1, int pageSize = 10)
+        {
+            return this.Repository.Page(page, pageSize);
+        }
+
+		public void Dispose()
+        {
+            this.UnitOfWork.Dispose();
+            this.Repository.Dispose();
+        }
+    }
+}

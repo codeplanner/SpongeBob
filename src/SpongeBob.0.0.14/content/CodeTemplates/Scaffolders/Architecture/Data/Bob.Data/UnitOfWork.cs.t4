@@ -1,0 +1,80 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+<#
+	foreach(string ns in Model.ExtraUsings.Split(','))
+	{
+	#>
+using <#= ns #>;
+	<#
+	}
+#>
+
+namespace <#= Model.Namespace #>
+{
+    public class UnitOfWork : IUnitOfWork
+    {
+        private IDataContext _datacontext;
+
+        private readonly IDatabaseFactory _databaseFactory;
+
+        public UnitOfWork(IDatabaseFactory databaseFactory)
+        {
+            this._databaseFactory = databaseFactory;
+            this.DataContext.ObjectContext().SavingChanges += (sender, e) => BeforeSave(this.GetChangedOrNewEntities());
+        }
+
+        public IDataContext DataContext
+        {
+            get { return this._datacontext ?? (this._datacontext = this._databaseFactory.Get()); }
+        }
+
+        /// <summary>
+        /// Extracts new or changed entities and return them as PersistenEntities.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<PersistentEntity> GetChangedOrNewEntities()
+        {
+            const EntityState newOrModified = EntityState.Added | EntityState.Modified;
+
+            return this.DataContext.ObjectContext().ObjectStateManager.GetObjectStateEntries(newOrModified)
+                .Where(x => x.Entity != null).Select(x => x.Entity as PersistentEntity);
+        }
+
+        /// <summary>
+        /// Before save, we will set the updated and created time.
+        /// We do this in save or update, but here we can reach all children that may have been edited/created.
+        /// In saveOrUpdate it´s only the current entity getting accessed...
+        /// </summary>
+        /// <param name="entities"></param>
+        public void BeforeSave(IEnumerable<PersistentEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                entity.Updated = DateTime.Now.ToString();                
+                    
+                if (this.DataContext.Entry(entity).State == EntityState.Added)
+                    entity.Created = DateTime.Now.ToString();
+            }
+        }
+
+        public static bool IsPersistent(PersistentEntity entity)
+        {
+            return entity.Id != 0;
+        }
+
+        public int Commit()
+        {
+            return this.DataContext.ObjectContext().SaveChanges();
+        }
+
+		public void Dispose()
+        {
+            this.DataContext.Dispose();
+            this._databaseFactory.Dispose();
+        }
+    }
+}

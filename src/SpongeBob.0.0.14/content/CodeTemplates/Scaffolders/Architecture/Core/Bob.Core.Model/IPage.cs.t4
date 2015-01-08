@@ -1,0 +1,17 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+//IMPORTANT - Modifications to this file may be overwritten:
+//If you need to implement your own logic/code do it in a partial class/interface.
+using System.Collections.Generic;
+
+namespace <#= Model.Namespace #>
+{
+    public interface IPage<T>
+    {
+        int CurrentPage { get; set; }
+        int PagesCount { get; set; }
+        int PageSize { get; set; }
+        int Count { get; set; }
+        IEnumerable<T> Entities { get; set; }
+    }
+}

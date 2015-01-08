@@ -1,0 +1,21 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+<#
+	foreach(string ns in Model.ExtraUsings.Split(','))
+	{
+	#>
+using <#= ns #>;
+	<#
+	}
+#>
+
+namespace <#= Model.Namespace #>
+{ 
+	//NOTE:
+	//If you need to implement your own logic/code do it in a partial interface,
+	//modifications in this file may be overwritten.
+    public partial interface I<#= Model.ClassName #>Repository : IRepository<<#= Model.ClassName #>>
+    {		
+		// Add extra datainterface methods in a partial interface
+	}
+}

@@ -1,0 +1,12 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+//IMPORTANT - Modifications to this file may be overwritten:
+//If you need to implement your own logic/code do it in a partial class/interface.
+using System;
+namespace <#= Model.Namespace #>
+{
+    public interface IUnitOfWork : IDisposable
+    {
+        int Commit();
+    }
+}
