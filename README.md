@@ -1,4 +1,4 @@
-# SpongeBob ![Mr SquarePants](http://xsockets.net/$2/file/spongebob.gif)
+# SpongeBob ![Mr SquarePants](https://xsockets.net/wp-content/uploads/2015/11/spongebob.png)
 
 Take me to the [Wiki](https://github.com/codeplanner/SpongeBob/wiki/1.-Home) now!
 
